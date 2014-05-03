@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Main Page</title>
+    <script type="text/javascript">
+//    var a_canvas = document.getElementById("a");
+    //function create new canvas()
+    /* *********************** */
+    /* *******CONSTANTS******* */
+    /* *********************** */
+    var spriteHeightWidthControl    = 64;   //2n
+    var HEX_N = spriteHeightWidthControl/2;
+    var ISO_HEX_HEIGHT      =   HEX_N; //n                 
+    var ISO_HEX_WIDTH       =   ISO_HEX_HEIGHT*2;           //2n
+    var ISO_SPRITE_HEIGHT   =   ISO_HEX_WIDTH;              //2n
+    var ISO_SPRITE_WIDTH    =   ISO_SPRITE_HEIGHT;          //2n
+    var ISO_HEX_DIAGONAL    =   Math.sqrt(( ISO_HEX_HEIGHT * ISO_HEX_HEIGHT )/2);
+    var ISO_HEX_PADDING     =   HEX_N/2;           //  n/2
+    
+
+
+    /* *********************** */
+
+    window.onload = function () 
+    { 
+        createNewHexMap();
+    }
+
+    //      START
+    //
+    //    A________B    //
+    //   ............   //
+    //  ..............  //
+    //F                C 
+    // ................ //
+    //   ............   //
+    //    E________D    //    
+    //
+    //
+
+    
+    //POINT A
+    function hexPointAOffsetX(originX)
+    {
+        return originX + ISO_HEX_PADDING;
+    }
+        
+    function hexPointAOffsetY(originY)
+    {
+        return originY + ISO_HEX_PADDING;
+    }
+    
+    //POINT B
+    function hexPointBOffsetX(originX)
+    {
+        return originX + ISO_HEX_PADDING + HEX_N;
+    }
+        
+    function hexPointBOffsetY(originY)
+    {
+        return originY + ISO_HEX_PADDING;
+    }
+        
+    //POINT C
+    function hexPointCOffsetX(originX)
+    {
+        return originX + ISO_HEX_WIDTH;
+    }
+        
+    function hexPointCOffsetY(originY)
+    {
+        return originY + HEX_N;
+    }
+    
+    //POINT D
+    function hexPointDOffsetX(originX)
+    {
+        return originX + ISO_HEX_PADDING + HEX_N;
+    }
+        
+    function hexPointDOffsetY(originY)
+    {
+        return originY + ISO_HEX_PADDING + HEX_N;
+    }
+    
+    //POINT E
+    function hexPointEOffsetX(originX)
+    {
+        return originX + ISO_HEX_PADDING;
+    }
+        
+    function hexPointEOffsetY(originY)
+    {
+        return originY + ISO_HEX_PADDING + HEX_N;
+    }
+    
+    //POINT F
+    function hexPointFOffsetX(originX)
+    {
+        return originX;
+    }
+        
+    function hexPointFOffsetY(originY)
+    {
+        return originY + HEX_N;
+    }
+    
+     //
+    //
+    //    A________B    //
+    //   ............   //
+    //  ..............  //
+    //F                C 
+    // ................ //
+    //   ............   //
+    //    E________D    //    
+    //
+    //      END
+    
+    function drawHex(originX, originY, canvas)
+    {
+        //quick hex hack
+        var c=canvas;
+        var ctx=c.getContext("2d");
+
+        ctx.beginPath();
+
+        ctx.moveTo( hexPointAOffsetX( originX ) , hexPointAOffsetY( originY) );
+        
+        
+        ctx.lineTo( hexPointBOffsetX( originX ) , hexPointBOffsetY( originY) );
+        ctx.lineTo( hexPointCOffsetX( originX ) , hexPointCOffsetY( originY) );
+        ctx.lineTo( hexPointDOffsetX( originX ) , hexPointDOffsetY( originY) );
+        ctx.lineTo( hexPointEOffsetX( originX ) , hexPointEOffsetY( originY) );
+        ctx.lineTo( hexPointFOffsetX( originX ) , hexPointFOffsetY( originY) );
+        ctx.lineTo( hexPointAOffsetX( originX ) , hexPointAOffsetY( originY) );
+//        ctx.strokeStyle="red";
+  //      ctx.stroke();
+        
+        
+        
+        //place hex image
+        var hexImage = new Image();
+        
+        var blockType = randomIntFromInterval(1,10);
+        
+        switch(blockType)
+        {
+            case 1:
+                hexImage.src = './grassy_1.png';
+                break;
+                      
+            case 2:
+                hexImage.src = './grassy_2.png';
+                break;
+                      
+            case 3:
+                hexImage.src = './grassy_3.png';
+                break;
+                
+            case 4:
+                hexImage.src = './grassy_1.png';
+                break;
+                
+            case 5:
+                hexImage.src = './Stone_1.png';
+                break;
+                      
+            case 6:
+                hexImage.src = './Stone_1.png';
+                break;
+                                      
+            case 7:
+                hexImage.src = './Stone_1.png';
+                break;
+                
+            case 8:
+                hexImage.src = './Corruption_1.png';
+                break;
+
+
+            default:
+                hexImage.src = './Stone_1.png';
+                break;
+        }
+
+        
+        //hexImage.src = './grassy_1.png';
+        
+        ctx.drawImage(hexImage, originX, originY);
+        //ctx.drawImage(image, originX, originY, spriteHeightWidthControl, spriteHeightWidthControl);
+    }
+    
+    
+     function getWindowWidth() 
+     {
+        var myWidth = 0, myHeight = 0;
+        if( typeof( window.innerWidth ) == 'number' ) {
+             myWidth = window.innerWidth; myHeight = window.innerHeight;
+        } 
+        else if( document.documentElement && ( document.documentElement.clientWidth ||document.documentElement.clientHeight ) )             
+        {
+             myWidth = document.documentElement.clientWidth; myHeight = document.documentElement.clientHeight;
+        } 
+        else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) 
+        {
+             myWidth = document.body.clientWidth; myHeight = document.body.clientHeight;
+        }
+        return myWidth;
+    }
+
+    
+    function randomIntFromInterval(min,max)
+    {
+        return Math.floor(Math.random()*(max-min+1)+min);
+    }
+        
+    function createNewHexMap()
+    {
+       var canvas = document.createElement('canvas');
+       document.body.appendChild(canvas);
+        
+        canvas.id     = "CursorLayer";
+        canvas.width  = window.innerWidth*2;
+        canvas.height = window.innerHeight*2;
+        canvas.style.zIndex   = 8;
+        canvas.style.position = "absolute";
+        canvas.style.border   = "1px solid";
+        
+        //void
+        var ctx = canvas.getContext("2d");
+        var voidImage = new Image();
+        voidImage.src = './void.jpg';
+        
+        for (var x = 0; x <= canvas.width; x+= 64)
+        {
+            for (var y = 0; y <= canvas.height; y+= 64)
+            {
+                ctx.drawImage(voidImage, x, y);
+            }        
+        }        
+        //
+        
+        
+        var posX = 0;
+        var posY = 0;
+        //drawHex(posX,posY,canvas);
+    
+        var switchPos = 0;
+        
+        var mapHeight = (canvas.height / spriteHeightWidthControl)*3;
+        var mapWidth = (canvas.width / spriteHeightWidthControl)*3;
+
+        var yMax = mapHeight*2;
+        var xMax = mapWidth*2;
+        
+        while((yMax % 5) === 0)
+        {
+            yMax--;
+        }
+        
+        while((xMax % 5) === 0)
+        {
+            xMax--;
+        }
+
+
+        var variance = 0;
+        
+        for (var y=0; y < yMax; y++)
+        {
+            variance = randomIntFromInterval(1, 30);
+            
+            for(var x=0; x < xMax; x++)
+            {
+                var posY = y/2* ISO_HEX_HEIGHT;
+                if (x%2 == 1)
+                {
+                    //posY+= ISO_HEX_HEIGHT/2;
+                    if(switchPos === 0)
+                        switchPos = 1;
+                    else
+                        switchPos = 0;
+                        
+                    continue;                    
+                }
+
+                if(switchPos === 1)
+                {
+                    posY += ISO_HEX_HEIGHT/2;
+                    if (x%2 === 0)    
+                    continue;
+                }
+                else if(x%2 === 1) 
+                {
+                    posY += ISO_HEX_HEIGHT/2;
+                    continue;
+                }
+        
+                if (randomIntFromInterval(0, variance) === 1 )
+        
+                continue; 
+                
+
+                
+                var posX = (ISO_HEX_PADDING + HEX_N)*x/2;
+                posX    += ISO_HEX_HEIGHT/2;
+                        
+                        
+                        
+                drawHex(posX, posY,canvas);               
+            }
+        }
+        
+        
+
+    }
+</script>
+</head>
+<body>
+   <img src="grassy_1.png" alt="some_text"/>
+   <img src="grassy_2.png" alt="some_text"/>
+      <img src="grassy_3.png" alt="some_text"/>
+         <img src="grassy_4.png" alt="some_text"/>
+         <img src="void.jpg" alt="some_text"/>
+         <img src="Stone_1.png" alt="some_text"/>
+         <img src="Corruption_1.png" alt="some_text"/>
+
+         <br/>
+</body>
+</html>
